@@ -1,13 +1,86 @@
 ---
-title: "RMarkdown"
-output: html_notebook
-editor_options: 
+title: "RMarkdown cap 27 y 28"
+output:
+  html_document:
+    df_print: paged
+editor_options:
   chunk_output_type: inline
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
+library(datos)
+
+pequenios <- diamantes %>%
+  filter(quilate <= 2.5)
 ```
 
+# Rmarkdown
+Tenemos datos respecto de `r nrow(diamantes)` diamantes. Únicamente 
+`r nrow(diamantes) - nrow(pequenios)` son mayores a 2,5 quilates. 
 
+La distribución de los diamantes pequeños se muestra a continuación:
+
+```{r, echo = FALSE}
+pequenios %>%
+  ggplot(aes(quilate)) +
+  geom_freqpoly(binwidth = 0.01)
+```
+## Render: 
+Para producir un reporte completo que contenga todo el texto, código y resultados, clic en “Knit” o presiona Ctrl + Shift + K. Puede hacerse también de manera programática con rmarkdown::render("1-example.Rmd").
+
+## Knit: Con las opciones de Knit se puede variar el tipo de salida (HTML, PDF, Word)
+
+Cuando haces knit al documento, R Markdown envía el .Rmd a knitr que ejecuta todos los bloques de código y crea un nuevo documento markdown (.md) que incluye el código y su output. El archivo markdown generado por knitr es procesado entonces por pandoc que es el responsable de crear el archivo terminado.
+
+![Flujo] (C:/Users/M-C/Documents/Certificacion/cheatsheets/Rmarkdown/Rmarkdown/Flujo RmdKnitPandoc.JPG)
+
+Formato de texto
+------------------------------------------------------------
+
+*cursiva*   o _cursiva_
+**negrita**   __negrita__
+`code`
+superíndice^2^ y subíndice~2~
+
+Encabezados
+------------------------------------------------------------
+
+# Encabezado de primer nivel
+
+## Encabezado de segundo nivel
+
+### Encabezado de tercer nivel
+
+Listas
+------------------------------------------------------------
+
+*   Elemento 1 en lista no enumerada
+
+*   Elemento 2
+
+    * Elemento 2a
+
+    * Elemento 2b
+
+1.  Elemento 1 en lista enumerada
+
+1.  Elemento 2. La numeración se incrementa automáticamente en el output.
+
+Enlaces e imágenes
+------------------------------------------------------------
+
+<http://ejemplo.com>
+
+[texto del enlace](http://ejemplo.com)
+
+
+
+Tablas 
+------------------------------------------------------------
+
+Primer encabezado     | Segundo encabezado
+--------------------- | ---------------------
+Contenido de la celda | Contenido de la celda
+Contenido de la celda | Contenido de la celda
