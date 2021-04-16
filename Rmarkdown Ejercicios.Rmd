@@ -70,11 +70,19 @@ Listas
 
 Enlaces e imágenes
 ------------------------------------------------------------
+![Problemas carga Flujo Rmarkdown](FlujoRmdKnitPandoc.jpg)
+
+si la imagen se encuentra al posicionarse encima, aparece la imagen como grisada
+
+![logo_github](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png){width='100px'}
+
+Dentro de los corchetes, se puede escribir el texto alternativo. Este es opcional y solo entra en acción cuando no se puede cargar la imagen correctamente.
 
 <http://ejemplo.com>
 
 [texto del enlace](http://ejemplo.com)
 
+## faltaría agregar otra forma como se hace en HTML, con un bloque <....>
 
 
 Tablas 
@@ -84,3 +92,78 @@ Primer encabezado     | Segundo encabezado
 --------------------- | ---------------------
 Contenido de la celda | Contenido de la celda
 Contenido de la celda | Contenido de la celda
+
+# Tabla ascii imagen
+![](C:/Users/M-C/Tabla_Ascii.jpg)
+
+## Bloques (Chunks)
+
+
+Para insertar un chunk de código se puede hacer con alt+ctrl+i o bien con el símbolo insert cuadradito c en verde, y con  la flecha se puede elegir lenguaje, o también manualmente tipeando ```{r} y ```
+
+Dentro del chumk sepuede ejecutar como antes con ctrl + enter... pero también esta el atajo ctrl+shift+enter que ejecuta todo el chunk.
+
+El encabezado de bloque, consiste en ```{r, seguido por un nombre opcional para el bloque, seguido luego por opciones separadas por comas y un }. Luego el código y al final ´´´
+Hay un chunk especial llamado setup: cuando te encuentras en modo Notebook, el bloque llamado setup se ejecutará automáticamente una vez, antes de ejecutar cualquier otro código.
+
+## Opciones dentro de Bloques
+
+Veremos las más importantes, el resto se puede encontrar en <http://yihui.name/knitr/options/>
+Estos, controlan si tu bloque de código es ejecutado y qué resultados estarán insertos en el reporte final:
+
+* eval = FALSE no se evalua el código y por ende no se ejecutará. Sirve por ejemplo para mostrar código como ejemplo o deshabilitar un bloque sin #.
+
+* include = FALSE ejecuta el código, pero no muestra el código ni los resultados en el documento final. Se usa para configuración, por ejemplo se incluyen library()...
+
+* echo = FALSE evita que el código se vea, pero muestra los resultados. Se usa mucho para usuarios finales q no quieren ver código.
+
+* message = FALSE o warning = FALSE, evita que aparezcan mensajes o advertencias en el documento final.
+
+* results = 'hide' oculta output impreso; fig.show = 'hide' oculta gráficos.
+
+* error = TRUE **causa que el render continúe aunque el código devuelva error. En general no se incluye en el código final, pero puede ser muy util para depurar código. Tambien es útil si quieres incluir un error al enseñar. Por default error = FALSE provoca el el knit falle incluso si hay error en documento**.
+
+Para lista completa de opciones en <http://yihui.name/knitr/options/>
+
+
+
+|Opción            | Ejecuta |	Muestra	|   Output	|  Gráficos	|  Mensajes |	Advertencias |
+|------------------|---------|----------|-----------|-----------|-----------|--------------|
+| eval = FALSE     |   -     |     		  |    -      |   	-     |   	-	    |       -      |
+| include = FALSE	 |    	   | -        |    -      |   	-	    |     -   	|       -      |
+| echo = FALSE	   |     		 | -		    |           |           |           |              |
+| results = "hide" |         |          |    -      |           |           |              |			
+| fig.show = "hide"|         |          |           | 		-	    |           |              |	
+| message = FALSE  |         |          |           |           | 		-	    |              |
+| warning = FALSE  |         |          |           |           |           |				-      |
+
+
+## Tablas y Graficos:
+Por defecto, R Markdown imprime data frames y matrices tal como se ven en la consola:
+
+```{r tablas, echo = FALSE}
+mtcars[1:5, ]
+
+```
+pero si se quiere con otro formato, se puede utilizar la función kable de knitr:
+```{r kable, echo FALSE}
+knitr::kable(
+  mtcars[1:5, ],
+  caption = "Un kable de knitr."
+)
+```
+
+?knitr::kable para ver los otros modos en los que puedes personalizar la tabla. Sino indagar en los paquetes: **xtable, stargazer, pander, tables y ascii**. Cada uno provee un set de herramientas para generar tablas con formato a partir código de R.
+En Markdown el párrafo que inicia con >  lo hace un bloque de cita. si además queremos un píe de cita alineado a derecha se puede generar con tuffle::quote_footer() en una expresión inline  por ejemplo:
+
+> Citas:  
+> Al Pan, pan... y al vino,vino 
+> No por mucho madrugar amanece más temprano
+> `r tufte::quote_footer(' Autor Anonimo')`
+
+## seguir desde 27.4.3 
+<https://es.r4ds.hadley.nz/comunicar-con-gr%C3%A1ficos.html#guardando-tus-gr%C3%A1ficos>
+Si quieres redimensionar gráficos para tu Rmarkdown: Hay cinco opciones principales que controlan el tamaño de la figura: >fig.width, >fig.height, >fig.asp, >out.width y >out.height. El tamaño de la imagen es un desafío porque hay dos tamaños (el tamaño de la figura creada por R y el tamaño al que se inserta en el documento de salida) y varias formas de especificarlo (es decir, altura, ancho y relación de aspecto: elige dos de tres). Estas son tres de las cinco:
+
+* que los gráficos tengan un ancho consistente, se puede configurar: 
+
