@@ -44,6 +44,8 @@ Formato de texto
 `code`
 superíndice^2^ y subíndice~2~
 
+**Para provocar salto de linea basta con tipear 2 espacios**
+
 Encabezados
 ------------------------------------------------------------
 
@@ -154,16 +156,61 @@ knitr::kable(
 ```
 
 ?knitr::kable para ver los otros modos en los que puedes personalizar la tabla. Sino indagar en los paquetes: **xtable, stargazer, pander, tables y ascii**. Cada uno provee un set de herramientas para generar tablas con formato a partir código de R.
-En Markdown el párrafo que inicia con >  lo hace un bloque de cita. si además queremos un píe de cita alineado a derecha se puede generar con tuffle::quote_footer() en una expresión inline  por ejemplo:
+En Markdown el párrafo que inicia con >  lo hace un **bloque de cita**. si además queremos un píe de cita alineado a derecha se puede generar con tuffle::quote_footer() en una expresión inline  por ejemplo:
 
 > Citas:  
 > Al Pan, pan... y al vino,vino 
 > No por mucho madrugar amanece más temprano
 > `r tufte::quote_footer(' Autor Anonimo')`
 
-## seguir desde 27.4.3 
-<https://es.r4ds.hadley.nz/comunicar-con-gr%C3%A1ficos.html#guardando-tus-gr%C3%A1ficos>
-Si quieres redimensionar gráficos para tu Rmarkdown: Hay cinco opciones principales que controlan el tamaño de la figura: >fig.width, >fig.height, >fig.asp, >out.width y >out.height. El tamaño de la imagen es un desafío porque hay dos tamaños (el tamaño de la figura creada por R y el tamaño al que se inserta en el documento de salida) y varias formas de especificarlo (es decir, altura, ancho y relación de aspecto: elige dos de tres). Estas son tres de las cinco:
+**Para quote individuales usar acento al revés alrededor de la palabra o frase que se quiere destacar**.     
 
-* que los gráficos tengan un ancho consistente, se puede configurar: 
+## Redimensionar graficos en Rmarkdown 
+
+Hay cinco opciones principales que controlan el tamaño de la figura: `fig.width`, `fig.height`, `fig.asp`, `out.width` y `out.height`. El tamaño de la imagen es un desafío porque hay dos tamaños (el tamaño de la figura creada por R y el tamaño al que se inserta en el documento de salida) y varias formas de especificarlo (es decir, altura, ancho y relación de aspecto: elige dos de tres). Estas son tres de las cinco:
+
+* que los gráficos tengan un ancho consistente, se puede configurar: `fig.width = 6` (6 ") y `fig.asp = 0.618` (la proporción áurea) en los valores predeterminados. Luego, en bloques individuales, solo ajusto `fig.asp`.
+
+* Controlo el tamaño de salida con `out.width` y lo configuro a un porcentaje del ancho de línea).De manera predeterminada, out.width = "70%" y fig.align = "center"
+
+* Para poner múltiples gráficos en una sola fila, establezco out.width en 50% para dos gráficos, 33% en 3 gráficos, o 25% en 4 gráficos, y setfig.align = "default".
+
+Si observas que tienes que entrecerrar los ojos para leer el texto de tu gráfico, debes ajustar fig.width. Si fig.width es mayor que el tamaño de la figura en el documento final, el texto será demasiado pequeño; si fig.width es más pequeño, el texto será demasiado grande. A menudo necesitarás experimentar un poco para calcular la proporción correcta entre fig.width y el ancho asociado en tu documento. 
+
+Si deseas asegurarte que el tamaño de fuente es el mismo en todas tus figuras, al establecer out.width, también necesitarás ajustar fig.width para mantener la misma proporción en relación al out.width predeterminado. Por ejemplo, si tu valor predeterminado de fig.width es 6 y out.width es 0.7, cuando establezcas out.width = "50%" necesitarás establecer fig.width a 4.3 (6 * 0.5 / 0.7).
+
+### Otras opciones importantes
+
+1. configurar `fig.show = "hold"` para que los gráficos se muestren después del código
+
+1. Para agregar un título al gráfico, usa fig.cap. En R Markdown esto cambiará la figura de “inline” a “floating”.
+
+1. Si estás produciendo resultados en formato PDF, el tipo de gráficos predeterminado es PDF, es bueno porque son graficos vectoriales de alta calidad. Pero puede ser muy grande la figura, entonces se puede configura `dev = "png"` para forzar el uso de PNG. Son de calidad ligeramente inferior, pero serán mucho más compactos.
+
+1. darles nombres a los bloques de código que producen figuras. Etiquetar el bloque se utiliza para generar el nombre de archivo del gráfico en el disco, por lo que darle un nombre a los bloques hace que sea mucho más fácil seleccionar gráficas y reutilizarlas.
+
+## Caching: 
+Si tienes cómputos que toman mucho tiempo, quiza no quieras empezar desde cero a procesar los bloques de codigo (aunque es muy bueno para la reprodcibilidad del documento). En ese caso, la solución es `cache = TRUE`. Guarda el output  del bloque en un archivo con un nombre especial en el disco. En ejecuciones siguientes, knitr revisará si el código ha cambiado, y si no ha hecho, reutilizará los resultados del caché. Pero por default no controla dependencia:por ejemplo si hay un chunk anterior que lea los datos a utilizar de disco. Para eso se utiliza la opción `dependson`. Knitr actualizará los resultados para el bloque cacheado cada vez que detecta que una de sus dependencias ha cambiado.  **A tener en cuenta: cache solo hace seguimiento de los cambios dentro del archivo .Rmd**. Para seguir también los cambios hechos en ese archivo, puedes usar la opción `cache.extra`.
+
+Acordarse de limpiar  todos los cachés con `knitr::clean_cache()`.
+
+El siguiente chunk se definió con cache.extra = file.info("un_archivo_muy_grande.csv"), y eval FALSE solo para poder usar a fines didácticos, para que no se evalue y trate de leer.
+
+```{r datos_crudos, cache.extra = file.info("un_archivo_muy_grande.csv"), eval = FALSE}
+datos_crudos <- readr::read_csv("un_archivo_muy_grande.csv")
+```
+
+## Opciones globales
+
+`knitr::opts_chunk$set()`  para setear opciones y no dejar las default. ** Se puede incluir en el chunk de setup**  
+Por ejemplo para tutoriales o libros usamos:
+
+
+knitr::opts_chunk$set(  
+  comment = "#>",  
+  collapse = TRUE  
+)
+
+Esto ocultará por defecto el código, así que solo mostrará los bloques que deliberadamente has elegido mostrar (con echo = TRUE). Puedes considerar fijar message = FALSE y warning = FALSE, pero eso puede hacer más díficil la tarea de depurar problemas, porque no verías ningún mensajes en el documento final.
+
 
