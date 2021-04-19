@@ -7,7 +7,7 @@ editor_options:
   chunk_output_type: inline
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(datos)
@@ -139,6 +139,8 @@ Para lista completa de opciones en <http://yihui.name/knitr/options/>
 | message = FALSE  |         |          |           |           | 		-	    |              |
 | warning = FALSE  |         |          |           |           |           |				-      |
 
+ collapse = TRUE muestra el block de fuente y de Output en un sólo bloque, si FALSE (es el default) lo muestra separado.                       **solo aplica para Markdown docs**.
+
 
 ## Tablas y Graficos:
 Por defecto, R Markdown imprime data frames y matrices tal como se ven en la consola:
@@ -203,14 +205,44 @@ datos_crudos <- readr::read_csv("un_archivo_muy_grande.csv")
 ## Opciones globales
 
 `knitr::opts_chunk$set()`  para setear opciones y no dejar las default. ** Se puede incluir en el chunk de setup**  
-Por ejemplo para tutoriales o libros usamos:
+Por ejemplo para tutoriales o libros usamos el sig. parrafo de global options, que utiliza nuestro formato preferido de comentarios y se asegura que el código y el output se mantengan entrelazados:
 
-
-knitr::opts_chunk$set(  
-  comment = "#>",  
-  collapse = TRUE  
-)
+>
+>knitr::opts_chunk$set(  
+>  comment = "#>",  
+>  collapse = TRUE  
+>)
 
 Esto ocultará por defecto el código, así que solo mostrará los bloques que deliberadamente has elegido mostrar (con echo = TRUE). Puedes considerar fijar message = FALSE y warning = FALSE, pero eso puede hacer más díficil la tarea de depurar problemas, porque no verías ningún mensajes en el documento final.
+
+> knitr::opts_chunk$set(
+>  echo = FALSE
+> )
+
+Con este chunk vas a conseguir que no se muestre el fuente ejecutado, y si deliberadamente en alguno se quiere mostrar en ese chunk hay que agregar echo = TRUE
+
+##Código R en linea de documento
+
+Como ya vimos se puede insertar con `r nrow(diamantes)`. Cuando el resultado es un número se puede formatear usando la función format(). En este caso, definimos la función coma para que no tenga un número demasiado grande de decimales y el separador de miles con coma.
+
+>coma <- function(x) format(x, digits = 2, big.mark = ",")
+>coma(3452345)
+>#> [1] "3,452,345"
+>coma(.12358124331)
+>#> [1] "0.12"
+
+**HACER LOS EJERCICIOS DEL LIBRO DE ESTE TEMA QUE SON INTERESANTES**
+
+## SOLUCIONANDO PROBLEMAS
+
+Es más complicado en RMarkdown, porque al ejecutar no estas en un ambiente interactivo R.   
+
+**Tips**:
+
+ 1. **Tratar de recrear el problema en una sesión interactiva.**  
+ 1. **Reinicia R, ejecuta todos los bloques de código. Si tienes suerte, eso recreará el problema y podrás descubrir lo que está ocurriendo interactivamente **  
+ 1. **Si lo anterior no ayuda, debe haber algo diferente entre nuestro ambiente interactivo y el ambiente de R Markdown -> hay que explorar sistemáticamente las opciones: La diferencia más común es el directorio de trabajo: el directorio de trabajo de R Markdown es el directorio en el que se encuentra: Revisar que el directorio de trabajo es el que esperas incluyendo getwd() en un bloque. **  
+ 1. **A continuación, piensa en todas las cosas que podrían causar el error. Necesitarás revisar sistemáticamente que tu sesión de R y tu sesión de R Markdown sean la misma. La manera más fácil de hacer esto es fijar error = TRUE en el bloque que causa problemas, y luego usa print() y str() para revisar que la configuración es la esperada. **  
+
 
 
