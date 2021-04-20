@@ -17,6 +17,9 @@ pequenios <- diamantes %>%
 ```
 
 # Rmarkdown
+
+https://github.com/cienciadedatos/r4ds/blob/traduccion/27-rmarkdown.Rmd
+
 Tenemos datos respecto de `r nrow(diamantes)` diamantes. Únicamente 
 `r nrow(diamantes) - nrow(pequenios)` son mayores a 2,5 quilates. 
 
@@ -204,8 +207,9 @@ datos_crudos <- readr::read_csv("un_archivo_muy_grande.csv")
 
 ## Opciones globales
 
-`knitr::opts_chunk$set()`  para setear opciones y no dejar las default. ** Se puede incluir en el chunk de setup**  
-Por ejemplo para tutoriales o libros usamos el sig. parrafo de global options, que utiliza nuestro formato preferido de comentarios y se asegura que el código y el output se mantengan entrelazados:
+Puedes definirlas 
+Por ejemplo para tutoriales o libros usamos el sig. parrafo de global options, que utiliza nuestro formato preferido de ># para comentarios y se asegura que el código y el output se mantengan entrelazados:
+\`knitr::opts_chunk$set()\`  para setear opciones y no dejar las default. ** Se puede incluir en el chunk de setup**  
 
 >
 >knitr::opts_chunk$set(  
@@ -225,11 +229,11 @@ Con este chunk vas a conseguir que no se muestre el fuente ejecutado, y si delib
 
 Como ya vimos se puede insertar con `r nrow(diamantes)`. Cuando el resultado es un número se puede formatear usando la función format(). En este caso, definimos la función coma para que no tenga un número demasiado grande de decimales y el separador de miles con coma.
 
->coma <- function(x) format(x, digits = 2, big.mark = ",")
->coma(3452345)
->#> [1] "3,452,345"
->coma(.12358124331)
->#> [1] "0.12"
+>coma <- function(x) format(x, digits = 2, big.mark = ",")  
+>coma(3452345)  
+>#> [1] "3,452,345"  
+>coma(.12358124331)  
+>#> [1] "0.12"  
 
 **HACER LOS EJERCICIOS DEL LIBRO DE ESTE TEMA QUE SON INTERESANTES**
 
@@ -244,5 +248,103 @@ Es más complicado en RMarkdown, porque al ejecutar no estas en un ambiente inte
  1. **Si lo anterior no ayuda, debe haber algo diferente entre nuestro ambiente interactivo y el ambiente de R Markdown -> hay que explorar sistemáticamente las opciones: La diferencia más común es el directorio de trabajo: el directorio de trabajo de R Markdown es el directorio en el que se encuentra: Revisar que el directorio de trabajo es el que esperas incluyendo getwd() en un bloque. **  
  1. **A continuación, piensa en todas las cosas que podrían causar el error. Necesitarás revisar sistemáticamente que tu sesión de R y tu sesión de R Markdown sean la misma. La manera más fácil de hacer esto es fijar error = TRUE en el bloque que causa problemas, y luego usa print() y str() para revisar que la configuración es la esperada. **  
 
+## YAML: YET ANOTHER MARKUP LANGUAGE
+
+Este lenguaje de marcado está diseñado para representar datos jerárquicos de modo facil para leer y escribir. R Markdown lo utiliza para controlar muchos detalles del output. Aquí sólo dos: parámetros del documento y bibliografías.
+
+### Parámetros:
+Los documentos R Markdown pueden incluir uno o mas parámetros cuyos valores pueden ser fijados cuando se renderiza el reporte.
+Para declarar uno o más parámetros, utiliza el campo  `param`.
+
+Este ejemplo utiliza el parámetro `my_class` para determinar que clase de auto mostrar:
+
+**IMPORTANTE: COMO QUERÍA QUE SALIERA EL .RMD Y NO DIERA ERROR TUVE QUE GENERAR UNA SUBDIRECTORIO EN RMARKDOWN LLAMADO
+rmarkdown_para_mostrar, copiar ahí el ejemplo que quería mostrar dandole el nombre de fuel_economy.rmd, y luego en este chunk hago un cat que sería como un print del read_file(rmarkdown_para_mostrar/fuel-economy.Rmd) ... al tener el chunk un echo = false no se muestra lo que se ejecuta que es el cat(de lo que se lee: el contenido del archivo fuel-economy.Rmd)
+
+```{r ejemplo_params, echo = FALSE, out.width = "100%", comment = ""}
+cat((readr::read_file("rmarkdown_para_mostrar/fuel-economy.Rmd")))
+
+```
+
+* Puedes escribir vectores atómicos directamente en el encabezado YAML.   
+* Puedes también ejecutar expresiones arbitrarias de R agregando !r antes del valor del parámetro. Esta es una buena manera de especificar parámetros de fecha/hora.
+
+Los parámetros están disponibles dentro de los bloques de código como una lista de solo lectura llamada params.
+
+```yaml
+params:
+ start: !r lubridate::ymd("2015-01-01")
+ snapshot: !r lubridate::ymd_hms("2015-01-01 12:30:00")
+```
+
+**Observar que el trozo de arriba no es un chunk de r, sino que es un quote para escribir params (y que no lo tome como parte del .Rmd?? no se lo probe sin el yaml y también funciono **
+
+Para ejecutar se puede hacer: 
+* knitr común, y se generará el render con el parámetro definido como default
+* knit con parámetros:  En RStudio, puedes hacer clic en la opción “Knit with Parameters” en el menú desplegable Knit para fijar parámetros, renderizar y previsualizar en un solo paso. Puedes personalizar el diálogo fijando otras opciones en el encabezado. Para ver más opciones de parametrización ir [aqui](https://bookdown.org/yihui/rmarkdown/parameterized-reports.html#parameter_user_interfaces)
+* si necesitas producir varios reportes parametrizados, puedes ejecutar rmarkdown::render() con una lista de params:
+ 
+```{r eval = FALSE}
+rmarkdown::render("rmarkdown_para_mostrar/fuel-economy.Rmd", params = list(mi_clase = "suv"))
+
+```
 
 
+Esto es particularmente poderoso en conjunto con `purrr:pwalk()`. El siguiente ejemplo crea un reporte para cada valor de `clase` que se encuentra  en `millas`. Primero creamos un data frame que tiene una fila para cada clase, dando el nombre de archivo (`filename`) del reporte y los `params`:
+
+```{r}
+reportes <- tibble(
+  clase = unique(millas$clase),
+  filename = stringr::str_c("economia-combustible-", clase, ".html"),
+  params = purrr::map(clase, ~ list(mi_clase = .))
+)
+reportes
+```
+Reportes es un tibble con 3 elementos:
+ * un vector con las clases (únicas) dentro del archivo millas. En este caso un vector de 7 elementos
+ * un vector con el nombre que llevará cada html que se va a generar. En este caso un vector de 7 elementos
+ * una lista con sublistas: cada sublistas son los parámetros, en este caso hace una lista de 7 sublistas donde cada sublista tiene 1 elemento
+Entonces unimos los nombres de las columnas con los nombres de los argumentos de `render()`, y utilizamos la función `pwalk()` (*parallel walk*) del paquete **purrr** para invocar `render()` una vez en cada fila:
+
+```{r, eval = FALSE}
+reportes %>%
+  select(output_file = filename, params) %>%
+  purrr::pwalk(rmarkdown::render, input = "rmarkdown_para_mostrar/fuel-economy.Rmd")
+```
+
+### Bibliografía y citas
+
+Pandoc puede generar automáticamente citas y bibliografía en varios estilos. Hay que especificar un archivo de bibliografía usando el campo `bibliography` en el YAML. El campo debe incluir una ruta del directorio que contiene tu archivo .Rmd al archivo que contiene el archivo de bibliografía:
+
+```yaml
+bibliography: rmarkdown.bib
+```
+
+Puedes usar muchos formatos comunes de biliografía incluyendo BibLaTeX, BibTeX, endnote, medline.
+
+Para crear una cita dentro de tu archivo .Rmd, usa una clave compuesta de ‘@’ + el identificador de la cita del archivo de la bibliografía. Después, ubica esta cita entre corchetes. Aquí hay algunos ejemplos:
+
+```markdown
+Multiple citas se separan con un `;`: Bla bla[@smith04; @doe99].
+
+Puedes incluir comentarios arbritarios dentro de los corchetes:
+Bla bla [ver @doe99, pp. 33-35; también @smith04, ch. 1].
+
+Remover los corchetes para crear una cita dentro del texto: @smith04
+dice bla, o @smith04 [p. 33] dice bla.
+
+Agrega un signo `-` antes de la cita para eliminar el nombre del autor:
+
+Smith dice bla [-@smith04].
+```
+
+Cuando R Markdown *renderice* tu archivo, construirá y agregará una bibliografía al final del documento. La bibliografía contendrá cada una de las referencias citadas de tu archivo de bibliografía, pero no contendrá un encabezado de sección. Como resultado, es una práctica común finalizar el archivo con un encabezado de sección para la bibliografía, tales como `# Referencias` or `# Bibliografía`.
+
+Puedes cambiar el estilo de tus citas y bibliografía referenciando un archivo CSL (sigla de "citation style language", es decir, lenguaje de estilo de citas) en el campo `csl`:
+
+```yaml
+bibliography: rmarkdown.bib
+csl: apa.csl
+```
+
+Tal y como en el campo de bibliografía, tu archivo csl debería contener una ruta al archivo. Aquí asumimos que el archivo csl está en el mismo directorio que el archivo .Rmd. Un buen lugar para encontrar archivos CSL para estilos de bibliografía comunes es <http://github.com/citation-style-language/styles>.
