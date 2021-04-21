@@ -1,8 +1,10 @@
 ---
 title: "RMarkdown cap 27 y 28"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
+  word_document: default
 editor_options:
   chunk_output_type: inline
 ---
@@ -37,7 +39,7 @@ Para producir un reporte completo que contenga todo el texto, código y resultad
 
 Cuando haces knit al documento, R Markdown envía el .Rmd a knitr que ejecuta todos los bloques de código y crea un nuevo documento markdown (.md) que incluye el código y su output. El archivo markdown generado por knitr es procesado entonces por pandoc que es el responsable de crear el archivo terminado.
 
-![Flujo] (C:/Users/M-C/Documents/Certificacion/cheatsheets/Rmarkdown/Rmarkdown/Flujo RmdKnitPandoc.JPG)
+![Problemas carga Flujo Rmarkdown](FlujoRmdKnitPandoc.jpg)
 
 Formato de texto
 ------------------------------------------------------------
@@ -75,11 +77,16 @@ Listas
 
 Enlaces e imágenes
 ------------------------------------------------------------
-![Problemas carga Flujo Rmarkdown](FlujoRmdKnitPandoc.jpg)
 
-si la imagen se encuentra al posicionarse encima, aparece la imagen como grisada
 
-![logo_github](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png){width='100px'}
+si la imagen se encuentra al posicionarse encima, aparece la imagen como grisada  
+
+**ojo!! que esta linea de abajo no funciona con salida pdf por eso esta puesta como chunk y el contenido comentario**
+
+```{r eval=FALSE}
+#![](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png){width='100px'}
+```
+
 
 Dentro de los corchetes, se puede escribir el texto alternativo. Este es opcional y solo entra en acción cuando no se puede cargar la imagen correctamente.
 
@@ -87,8 +94,7 @@ Dentro de los corchetes, se puede escribir el texto alternativo. Este es opciona
 
 [texto del enlace](http://ejemplo.com)
 
-## faltaría agregar otra forma como se hace en HTML, con un bloque <....>
-
+## faltaría agregar otra forma como se hace en HTML, con un bloque 
 
 Tablas 
 ------------------------------------------------------------
