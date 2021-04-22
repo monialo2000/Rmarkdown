@@ -1,10 +1,10 @@
 ---
-title: "RMarkdown cap 27 y 28"
+title: "RMarkdown cap 27, parte 28, 29 y 30"
 output:
-  pdf_document: default
+  word_document: default
   html_document:
     df_print: paged
-  word_document: default
+  pdf_document: default
 editor_options:
   chunk_output_type: inline
 ---
@@ -138,15 +138,16 @@ Para lista completa de opciones en <http://yihui.name/knitr/options/>
 
 
 
-|Opción            | Ejecuta |	Muestra	|   Output	|  Gráficos	|  Mensajes |	Advertencias |
-|------------------|---------|----------|-----------|-----------|-----------|--------------|
-| eval = FALSE     |   -     |     		  |    -      |   	-     |   	-	    |       -      |
-| include = FALSE	 |    	   | -        |    -      |   	-	    |     -   	|       -      |
-| echo = FALSE	   |     		 | -		    |           |           |           |              |
-| results = "hide" |         |          |    -      |           |           |              |			
-| fig.show = "hide"|         |          |           | 		-	    |           |              |	
-| message = FALSE  |         |          |           |           | 		-	    |              |
-| warning = FALSE  |         |          |           |           |           |				-      |
+Opción | Ejecuta | Muestra | Output | Gráficos | Mensajes |Advertencias
+-------------------|----------|-----------|--------|----------|----------|------------
+`eval = FALSE` | - | | - | - | - | -
+`include = FALSE` | | - | - | - | - | -
+`echo = FALSE` | | - | | | |
+`results = "hide"` | | | - | | |
+`fig.show = "hide"`| | | | - | |
+`message = FALSE` | | | | | - |
+`warning = FALSE` | | | | | | -
+
 
  collapse = TRUE muestra el block de fuente y de Output en un sólo bloque, si FALSE (es el default) lo muestra separado.                       **solo aplica para Markdown docs**.
 
@@ -166,7 +167,7 @@ knitr::kable(
 )
 ```
 
-?knitr::kable para ver los otros modos en los que puedes personalizar la tabla. Sino indagar en los paquetes: **xtable, stargazer, pander, tables y ascii**. Cada uno provee un set de herramientas para generar tablas con formato a partir código de R.
+?knitr::kable para ver los otros modos en los que puedes personalizar la tabla. Sino indagar en los paquetes: **xtable, stargazer, pander, tables y ascii**. Cada uno provee un set de herramientas para generar tablas con formato a partir código de R.  
 En Markdown el párrafo que inicia con >  lo hace un **bloque de cita**. si además queremos un píe de cita alineado a derecha se puede generar con tuffle::quote_footer() en una expresión inline  por ejemplo:
 
 > Citas:  
@@ -354,3 +355,110 @@ csl: apa.csl
 ```
 
 Tal y como en el campo de bibliografía, tu archivo csl debería contener una ruta al archivo. Aquí asumimos que el archivo csl está en el mismo directorio que el archivo .Rmd. Un buen lugar para encontrar archivos CSL para estilos de bibliografía comunes es <http://github.com/citation-style-language/styles>.
+
+#Formatos de rmarkdow
+Se pueden indicar:  
+- Permanente, modificando el YAML -> output: html_document
+- transitorio, indicandolo dentro de rmarkdown::render("diamonds.Rmd", output_format="word_document")
+- Seleccionando salida con boton Knit
+
+usar ?rmarkdown::html_document para saber que opciones se pueden utilizar cuando se hace render con formato html  
+
+si se quiere utilizar parámetros distintos a los de default utilizar un campo output extendido. Por ejemplo:  
+
+```yaml
+output:  
+  html_document:  
+    toc: true  
+    toc_float: true  
+```
+
+También se pueden generar múltiples salidas, indicándolo en el YAML. Si no quieres modificar ninguna de las opciones por defecto debes indicar la palabra _default_:
+
+```yaml
+output:
+  html_document:
+    toc: true
+    toc_float: true
+  pdf_document: default
+
+```
+
+Los formatos que se pueden generar son:
+-html  
+-pdf  
+-doc  
+-odt  
+-rtf  
+-md_document  
+-github_document
+
+## Documentos sin visualizar codigo
+Recordar que se puede hacer indicando en el chunk setup, 
+
+```{r eval = FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+Otra opción para los `html_document`es hacer que los fragmentos de código estén escondidos por defecto, pero visibles con un clic:
+
+```yaml
+output:
+  html_document:
+    code_folding: hide
+```
+
+## Notebooks
+Es similar a un html_document, pero esta màs orientado para colaborar, por ej. en ciencia de datos. Estos propósitos diferentes llevan a que la salida HTML sea usada de diferentes maneras. Ambas contendrán todo el output renderizado, pero el notebook también contendrá el código fuente completo. Esto significa que puedes usar el archivo `.nb.html` generado por el notebook de dos maneras:
+1. Puedes verlo en un navegador web y ver el output generado. A diferencia del
+   `html_document`, esta renderización siempre incluye una copia incrustada del
+   código fuente que lo generó.   
+
+2. Puedes editarlo en RStudio. Cuando abras un archivo `.nb.html`, RStudio 
+   automáticamente recreará el archivo `.Rmd` que lo creó. En el futuro, también
+   podrás incluir archivos de soporte (por ej., archivos de datos `.csv`), que 
+   serán extraídos automáticamente cuando sea necesario.
+
+Enviar archivos `.nb.html` por correo electrónico es una manera simple de compartir los análisis con tus colegas.
+Otra opciòn ùtil es
+```yaml
+output:
+  html_notebook: default
+  github_document: default
+```
+
+`html_notebook` te da una vista previa local y un archivo que puedes compartir por correo electrónico. `github_document` crea un archivo md mínimo que puedes ingresar en Git. Puedes revisar fácilmente cómo los resultados de tus análisis (no solo el código) cambian con el tiempo y GitHub lo renderizará muy bien en línea.
+
+
+## Presentaciones:
+
+Las presentaciones funcionan dividiendo tu contenido en diapositivas, con una nueva diapositiva que comienza en cada encabezado de primer nivel (#) o de segundo nivel (##). También puedes insertar una regla horizontal (***) para crear una nueva diapositiva sin encabezado.
+
+R Markdown viene con tres formatos de presentación integrados:
+1. ioslides_presentation - Presentación HTML con ioslides.
+
+1. slidy_presentation - Presentación HTML con W3C Slidy.
+
+1. beamer_presentation - Presentación PDF con LaTeX Beamer.
+
+## Dashboards:
+Los dashboards o tableros de control son una forma útil de comunicar grandes cantidades de información de forma visual y rápida. Flexdashboard hace que sea particularmente fácil crear dashboards usando R Markdown y proporciona una convención de cómo los encabezados afectan el diseño:
+
+* Cada encabezado de Nivel 1 (#) comienza una nueva página en el dashboard.
+* Cada encabezado de Nivel 2 (##) comienza una nueva columna.
+* Cada encabezado de Nivel 3 (###) comienza una nueva fila.
+
+Por ejemplo, puedes producir este dashboard:
+
+```{r, echo = FALSE, out.width = "75%"}
+#knitr::include_graphics("screenshots/rmarkdown-flexdashboard.png")
+```
+
+Usando este código:
+
+```{r comment = "", echo = FALSE}
+#cat(readr::read_file("rmarkdown/dashboard.Rmd"))
+```
+
+Para obtener más información (en inglés) acerca de Flexdashboard visita <http://rmarkdown.rstudio.com/flexdashboard/>.
+
