@@ -2,9 +2,9 @@
 title: "RMarkdown cap 27, parte 28, 29 y 30"
 output:
   word_document: default
+  pdf_document: default
   html_document:
     df_print: paged
-  pdf_document: default
 editor_options:
   chunk_output_type: inline
 ---
@@ -462,3 +462,53 @@ Usando este código:
 
 Para obtener más información (en inglés) acerca de Flexdashboard visita <http://rmarkdown.rstudio.com/flexdashboard/>.
 
+
+## Información Extra: Cambiar tipo y  tamaño de letra en Rmarkdown
+Para cambiar el tipo y tamaño de letra general del documento se puede utilizar un archivo css que se debe incluir en el mismo proyecto. En el YAML del documento Rmarkdown se declara así:
+
+### opcion 1
+
+``` YAML
+---
+output:
+  html_document:
+    css: style.css
+---
+```
+
+En style.css escribir el siguiente código
+
+```
+
+/* Whole document: */
+body{
+  font-family: Helvetica;
+  font-size: 16pt;
+}
+/* Headers */
+h1,h2,h3,h4,h5,h6{
+  font-size: 24pt;
+}
+
+```
+
+###  opción 2
+En el  YAML del Rmarkdown agregar estas lineas de css. Luego seguirá como siempre el chunk de setup
+
+
+```
+---
+title: "Ejemplo"
+author: "Mónica Alonso"
+date: "25/04/2020"
+output: html_document
+---
+<style type="text/css">
+  body{
+  font-size: 16pt;
+}
+</style>
+
+```
+
+Obtenido de <https://stackoverflow.com/questions/29274501/r-markdown-changing-font-size-and-font-type-in-html-output/29298407>

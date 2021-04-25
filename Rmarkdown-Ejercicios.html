@@ -2130,6 +2130,47 @@ csl: apa.csl</code></pre>
 <p>Usando este código:</p>
 <p>Para obtener más información (en inglés) acerca de Flexdashboard visita <a href="http://rmarkdown.rstudio.com/flexdashboard/" class="uri">http://rmarkdown.rstudio.com/flexdashboard/</a>.</p>
 </div>
+<div id="información-extra-cambiar-tipo-y-tamaño-de-letra-en-rmarkdown" class="section level2">
+<h2>Información Extra: Cambiar tipo y tamaño de letra en Rmarkdown</h2>
+<p>Para cambiar el tipo y tamaño de letra general del documento se puede utilizar un archivo css que se debe incluir en el mismo proyecto. En el YAML del documento Rmarkdown se declara así:</p>
+<div id="opcion-1" class="section level3">
+<h3>opcion 1</h3>
+<pre class="yaml"><code>---
+output:
+  html_document:
+    css: style.css
+---</code></pre>
+<p>En style.css escribir el siguiente código</p>
+<pre><code>
+/* Whole document: */
+body{
+  font-family: Helvetica;
+  font-size: 16pt;
+}
+/* Headers */
+h1,h2,h3,h4,h5,h6{
+  font-size: 24pt;
+}
+</code></pre>
+</div>
+<div id="opción-2" class="section level3">
+<h3>opción 2</h3>
+<p>En el YAML del Rmarkdown agregar estas lineas de css. Luego seguirá como siempre el chunk de setup</p>
+<pre><code>---
+title: &quot;Ejemplo&quot;
+author: &quot;Mónica Alonso&quot;
+date: &quot;25/04/2020&quot;
+output: html_document
+---
+&lt;style type=&quot;text/css&quot;&gt;
+  body{
+  font-size: 16pt;
+}
+&lt;/style&gt;
+</code></pre>
+<p>Obtenido de <a href="https://stackoverflow.com/questions/29274501/r-markdown-changing-font-size-and-font-type-in-html-output/29298407" class="uri">https://stackoverflow.com/questions/29274501/r-markdown-changing-font-size-and-font-type-in-html-output/29298407</a></p>
+</div>
+</div>
 </div>
 
 
