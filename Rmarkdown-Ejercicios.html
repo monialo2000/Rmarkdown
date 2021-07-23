@@ -1623,8 +1623,8 @@ pre code {
 </div>
 
 
-<div id="rmarkdown" class="section level1">
-<h1>Rmarkdown</h1>
+<div id="rmarkdown---documento-generado-a-fecha-2021-07-23" class="section level1">
+<h1>Rmarkdown - documento generado a fecha: 2021-07-23</h1>
 <p><a href="https://github.com/cienciadedatos/r4ds/blob/traduccion/27-rmarkdown.Rmd" class="uri">https://github.com/cienciadedatos/r4ds/blob/traduccion/27-rmarkdown.Rmd</a></p>
 <p>Tenemos datos respecto de 53940 diamantes. Únicamente 126 son mayores a 2,5 quilates.</p>
 <p>La distribución de los diamantes pequeños se muestra a continuación:</p>
@@ -1672,14 +1672,11 @@ pre code {
 <div id="enlaces-e-imágenes" class="section level2">
 <h2>Enlaces e imágenes</h2>
 <p>si la imagen se encuentra al posicionarse encima, aparece la imagen como grisada</p>
-<p><strong>ojo!! que esta linea de abajo no funciona con salida pdf por eso esta puesta como chunk y el contenido comentario</strong></p>
+<p><strong>ojo!! que esta linea de abajo no funciona con salida pdf por eso esta puesta como chunk con eval = false y el contenido comentario</strong></p>
 <pre class="r"><code>#![](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png){width=&#39;100px&#39;}</code></pre>
 <p>Dentro de los corchetes, se puede escribir el texto alternativo. Este es opcional y solo entra en acción cuando no se puede cargar la imagen correctamente.</p>
 <p><a href="http://ejemplo.com" class="uri">http://ejemplo.com</a></p>
 <p><a href="http://ejemplo.com">texto del enlace</a></p>
-</div>
-<div id="faltaría-agregar-otra-forma-como-se-hace-en-html-con-un-bloque" class="section level2">
-<h2>faltaría agregar otra forma como se hace en HTML, con un bloque</h2>
 </div>
 <div id="tablas" class="section level2">
 <h2>Tablas</h2>
@@ -1717,11 +1714,11 @@ pre code {
 <p>Veremos las más importantes, el resto se puede encontrar en <a href="http://yihui.name/knitr/options/" class="uri">http://yihui.name/knitr/options/</a> Estos, controlan si tu bloque de código es ejecutado y qué resultados estarán insertos en el reporte final:</p>
 <ul>
 <li><p>eval = FALSE no se evalua el código y por ende no se ejecutará. Sirve por ejemplo para mostrar código como ejemplo o deshabilitar un bloque sin #.</p></li>
-<li><p>include = FALSE ejecuta el código, pero no muestra el código ni los resultados en el documento final. Se usa para configuración, por ejemplo se incluyen library()…</p></li>
+<li><p>include = FALSE ejecuta el código, pero no muestra el código ni los resultados en el documento final. Se usa para configuración, por ejemplo se incluyen library()…o seleccion de datos de un archivo combinado con parámetros</p></li>
 <li><p>echo = FALSE evita que el código se vea, pero muestra los resultados. Se usa mucho para usuarios finales q no quieren ver código.</p></li>
 <li><p>message = FALSE o warning = FALSE, evita que aparezcan mensajes o advertencias en el documento final.</p></li>
 <li><p>results = ‘hide’ oculta output impreso; fig.show = ‘hide’ oculta gráficos.</p></li>
-<li><p>error = TRUE <strong>causa que el render continúe aunque el código devuelva error. En general no se incluye en el código final, pero puede ser muy util para depurar código. Tambien es útil si quieres incluir un error al enseñar. Por default error = FALSE provoca el el knit falle incluso si hay error en documento</strong>.</p></li>
+<li><p>error = TRUE <strong>causa que el render continúe aunque el código devuelva error. En general no se incluye en el código final, pero puede ser muy util para depurar código. Tambien es útil si quieres incluir un error al enseñar. Por default error = FALSE provoca que el knit falle incluso si hay error en documento</strong>.</p></li>
 </ul>
 <p>Para lista completa de opciones en <a href="http://yihui.name/knitr/options/" class="uri">http://yihui.name/knitr/options/</a></p>
 <table>
@@ -1912,7 +1909,8 @@ pre code {
 En Markdown el párrafo que inicia con &gt; lo hace un <strong>bloque de cita</strong>. si además queremos un píe de cita alineado a derecha se puede generar con tuffle::quote_footer() en una expresión inline por ejemplo:</p>
 <blockquote>
 Citas:<br />
-Al Pan, pan… y al vino,vino No por mucho madrugar amanece más temprano
+Al Pan, pan… y al vino,vino<br />
+No por mucho madrugar amanece más temprano
 <footer>
 Autor Anonimo
 </footer>
@@ -1990,7 +1988,7 @@ coma(.12358124331)<br />
 <p>Este lenguaje de marcado está diseñado para representar datos jerárquicos de modo facil para leer y escribir. R Markdown lo utiliza para controlar muchos detalles del output. Aquí sólo dos: parámetros del documento y bibliografías.</p>
 <div id="parámetros" class="section level3">
 <h3>Parámetros:</h3>
-<p>Los documentos R Markdown pueden incluir uno o mas parámetros cuyos valores pueden ser fijados cuando se renderiza el reporte. Para declarar uno o más parámetros, utiliza el campo <code>param</code>.</p>
+<p>Los documentos R Markdown pueden incluir uno o mas parámetros cuyos valores pueden ser fijados cuando se renderiza el reporte. Para declarar uno o más parámetros, utiliza el campo <code>params</code>.</p>
 <p>Este ejemplo utiliza el parámetro <code>my_class</code> para determinar que clase de auto mostrar:</p>
 <p>**IMPORTANTE: COMO QUERÍA QUE SALIERA EL .RMD Y NO DIERA ERROR TUVE QUE GENERAR UNA SUBDIRECTORIO EN RMARKDOWN LLAMADO rmarkdown_para_mostrar, copiar ahí el ejemplo que quería mostrar dandole el nombre de fuel_economy.rmd, y luego en este chunk hago un cat que sería como un print del read_file(rmarkdown_para_mostrar/fuel-economy.Rmd) … al tener el chunk un echo = false no se muestra lo que se ejecuta que es el cat(de lo que se lee: el contenido del archivo fuel-economy.Rmd)</p>
 <pre><code>---
@@ -2041,6 +2039,7 @@ reportes</code></pre>
 <pre class="r"><code>reportes %&gt;%
   select(output_file = filename, params) %&gt;%
   purrr::pwalk(rmarkdown::render, input = &quot;rmarkdown_para_mostrar/fuel-economy.Rmd&quot;)</code></pre>
+<p><strong>Fijarse en este documento hay 2 parámetros definidos, que en el título principal se utiliza uno starts, que está predefinido con today() de lubridate. Cuando se knitea se puede hacer con parámetros y definirle la fecha que uno quiere que aparezca.</strong></p>
 </div>
 <div id="bibliografía-y-citas" class="section level3">
 <h3>Bibliografía y citas</h3>

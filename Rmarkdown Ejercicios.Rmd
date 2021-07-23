@@ -1,16 +1,21 @@
 ---
 title: "RMarkdown cap 27, parte 28, 29 y 30"
 output:
-  word_document: default
-  pdf_document: default
   html_document:
+#    toc: true
     df_print: paged
+  pdf_document: default
+  word_document: default
 editor_options:
   chunk_output_type: inline
+params:
+ start: !r lubridate::today()
+ snapshot: !r lubridate::ymd_hms("2015-01-01 12:30:00")
 ---
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+#knitr::opts_chunk$set(fig.width=12, fig.height=8)
 library(tidyverse)
 library(datos)
 
@@ -18,7 +23,7 @@ pequenios <- diamantes %>%
   filter(quilate <= 2.5)
 ```
 
-# Rmarkdown
+# Rmarkdown - documento generado a fecha: `r params$start`
 
 https://github.com/cienciadedatos/r4ds/blob/traduccion/27-rmarkdown.Rmd
 
@@ -81,7 +86,7 @@ Enlaces e imágenes
 
 si la imagen se encuentra al posicionarse encima, aparece la imagen como grisada  
 
-**ojo!! que esta linea de abajo no funciona con salida pdf por eso esta puesta como chunk y el contenido comentario**
+**ojo!! que esta linea de abajo no funciona con salida pdf por eso esta puesta como chunk con eval = false y el contenido comentario**
 
 ```{r eval=FALSE}
 #![](https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png){width='100px'}
@@ -94,7 +99,6 @@ Dentro de los corchetes, se puede escribir el texto alternativo. Este es opciona
 
 [texto del enlace](http://ejemplo.com)
 
-## faltaría agregar otra forma como se hace en HTML, con un bloque 
 
 Tablas 
 ------------------------------------------------------------
@@ -124,7 +128,7 @@ Estos, controlan si tu bloque de código es ejecutado y qué resultados estarán
 
 * eval = FALSE no se evalua el código y por ende no se ejecutará. Sirve por ejemplo para mostrar código como ejemplo o deshabilitar un bloque sin #.
 
-* include = FALSE ejecuta el código, pero no muestra el código ni los resultados en el documento final. Se usa para configuración, por ejemplo se incluyen library()...
+* include = FALSE ejecuta el código, pero no muestra el código ni los resultados en el documento final. Se usa para configuración, por ejemplo se incluyen library()...o  seleccion de datos de un archivo combinado con parámetros
 
 * echo = FALSE evita que el código se vea, pero muestra los resultados. Se usa mucho para usuarios finales q no quieren ver código.
 
@@ -132,7 +136,7 @@ Estos, controlan si tu bloque de código es ejecutado y qué resultados estarán
 
 * results = 'hide' oculta output impreso; fig.show = 'hide' oculta gráficos.
 
-* error = TRUE **causa que el render continúe aunque el código devuelva error. En general no se incluye en el código final, pero puede ser muy util para depurar código. Tambien es útil si quieres incluir un error al enseñar. Por default error = FALSE provoca el el knit falle incluso si hay error en documento**.
+* error = TRUE **causa que el render continúe aunque el código devuelva error. En general no se incluye en el código final, pero puede ser muy util para depurar código. Tambien es útil si quieres incluir un error al enseñar. Por default error = FALSE provoca que el knit falle incluso si hay error en documento**.
 
 Para lista completa de opciones en <http://yihui.name/knitr/options/>
 
@@ -171,7 +175,7 @@ knitr::kable(
 En Markdown el párrafo que inicia con >  lo hace un **bloque de cita**. si además queremos un píe de cita alineado a derecha se puede generar con tuffle::quote_footer() en una expresión inline  por ejemplo:
 
 > Citas:  
-> Al Pan, pan... y al vino,vino 
+> Al Pan, pan... y al vino,vino   
 > No por mucho madrugar amanece más temprano
 > `r tufte::quote_footer(' Autor Anonimo')`
 
@@ -261,7 +265,7 @@ Este lenguaje de marcado está diseñado para representar datos jerárquicos de 
 
 ### Parámetros:
 Los documentos R Markdown pueden incluir uno o mas parámetros cuyos valores pueden ser fijados cuando se renderiza el reporte.
-Para declarar uno o más parámetros, utiliza el campo  `param`.
+Para declarar uno o más parámetros, utiliza el campo  `params`.
 
 Este ejemplo utiliza el parámetro `my_class` para determinar que clase de auto mostrar:
 
@@ -318,6 +322,9 @@ reportes %>%
   select(output_file = filename, params) %>%
   purrr::pwalk(rmarkdown::render, input = "rmarkdown_para_mostrar/fuel-economy.Rmd")
 ```
+
+
+**Fijarse en este documento hay 2 parámetros definidos, que en el título principal se utiliza uno starts, que está predefinido con today() de lubridate. Cuando se knitea se puede hacer con parámetros y definirle la fecha que uno quiere que aparezca.**
 
 ### Bibliografía y citas
 
